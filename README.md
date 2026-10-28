@@ -12,9 +12,14 @@ AI Pulse helps enterprises assess and accelerate responsible AI adoption across 
 
 ## Live Production Deployment
 
-- **Backend API Base**: [https://ai-pulse-ii6u.onrender.com](https://ai-pulse-ii6u.onrender.com)
-- **Backend Health Check**: [https://ai-pulse-ii6u.onrender.com/health](https://ai-pulse-ii6u.onrender.com/health) (Status: `ok`)
-- **Frontend App**: Deploying on Vercel (Configured with `VITE_API_BASE_URL=https://ai-pulse-ii6u.onrender.com`)
+| Service | Provider | Status | Live Link |
+|---|---|---|---|
+| **Frontend Application** | Vercel | Online | [https://ai-pulse-iota-one.vercel.app](https://ai-pulse-iota-one.vercel.app) |
+| **Backend API Base** | Render | Online | [https://ai-pulse-ii6u.onrender.com](https://ai-pulse-ii6u.onrender.com) |
+| **Backend Health Check** | Render | Healthy (`{"status":"ok"}`) | [https://ai-pulse-ii6u.onrender.com/health](https://ai-pulse-ii6u.onrender.com/health) |
+
+- **Demo Logins**: All accounts use password `pulse123` (e.g. `asha@northwind.test`, `priya@northwind.test`, `ravi@consult.test`).
+- **Provider Limitations**: Render free-tier instances sleep after 15 minutes of inactivity; the initial request may take ~30 seconds for cold-start wakeup. Vercel frontend is globally cached and serves instantly.
 
 ---
 

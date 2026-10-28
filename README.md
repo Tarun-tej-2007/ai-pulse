@@ -10,6 +10,14 @@ AI Pulse helps enterprises assess and accelerate responsible AI adoption across 
 
 ---
 
+## Live Production Deployment
+
+- **Backend API Base**: [https://ai-pulse-ii6u.onrender.com](https://ai-pulse-ii6u.onrender.com)
+- **Backend Health Check**: [https://ai-pulse-ii6u.onrender.com/health](https://ai-pulse-ii6u.onrender.com/health) (Status: `ok`)
+- **Frontend App**: Deploying on Vercel (Configured with `VITE_API_BASE_URL=https://ai-pulse-ii6u.onrender.com`)
+
+---
+
 ## Architecture & Tech Stack
 
 - **Backend**: Python 3.12, FastAPI, SQLAlchemy 2.0, SQLite (with enforced foreign key constraints), PyJWT, Pydantic v2.

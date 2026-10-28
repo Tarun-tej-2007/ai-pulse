@@ -11,6 +11,9 @@ if os.path.exists(_env_path):
 
 SECRET_KEY = os.getenv("SECRET_KEY", "ai-pulse-dev-secret")
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./aipulse.db")
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 AI_MODE = os.getenv("AI_MODE", "mock")  # "mock" or "live"
 LLM_API_URL = os.getenv("LLM_API_URL", "")
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
@@ -18,3 +21,4 @@ LLM_MODEL = os.getenv("LLM_MODEL", "")
 TOKEN_HOURS = 12
 _cors_env = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173")
 CORS_ORIGINS = [orig.strip() for orig in _cors_env.split(",") if orig.strip()]
+CORS_ORIGIN_REGEX = os.getenv("CORS_ORIGIN_REGEX", r"https://.*\.vercel\.app")

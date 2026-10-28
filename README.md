@@ -94,6 +94,61 @@ npm run dev
 
 ---
 
+## Production Deployment Architecture
+
+The application is architected for zero-downtime, independent cloud deployment:
+
+- **Frontend**: [Vercel](https://vercel.com) (React 18 + Vite SPA)
+- **Backend**: [Render](https://render.com) (FastAPI Python Web Service)
+- **Database**: [Render PostgreSQL](https://render.com/docs/databases) (Persistent Cloud Database)
+
+### 1. Backend & PostgreSQL Deployment (Render)
+
+You can deploy using either the automated Blueprint or manual dashboard:
+
+#### Option A: One-Click Render Blueprint (Recommended)
+1. Push your repository to GitHub.
+2. In the Render Dashboard, click **New +** > **Blueprint**.
+3. Select your repository `https://github.com/Tarun-tej-2007/ai-pulse`.
+4. Render automatically reads [render.yaml](file:///render.yaml), provisioning:
+   - A free managed **PostgreSQL database** (`ai-pulse-db`).
+   - A Python **FastAPI Web Service** (`ai-pulse-backend`) with connected environment variables, automatic migrations on startup (`Base.metadata.create_all()`), and health check `/health`.
+
+#### Option B: Manual Dashboard Steps
+1. **Create PostgreSQL Database**:
+   - In Render, click **New +** > **PostgreSQL**.
+   - Name: `ai-pulse-db`, Database: `aipulse`, User: `aipulse_user`, Plan: `Free`.
+   - Copy the **Internal Database URL** (or External if connecting remotely).
+2. **Create Web Service**:
+   - Click **New +** > **Web Service** and select your repository.
+   - Root Directory: `backend`
+   - Runtime: `Python` (Python 3.12)
+   - Build Command: `pip install -r requirements.txt`
+   - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+   - Health Check Path: `/health`
+3. **Configure Environment Variables**:
+   - `DATABASE_URL`: Your Render PostgreSQL connection string (SQLAlchemy automatically normalizes `postgres://` to `postgresql://`).
+   - `SECRET_KEY`: A strong random string (e.g., generated with `openssl rand -hex 32`).
+   - `AI_MODE`: `mock` (or `live` with `LLM_API_URL`, `LLM_API_KEY`, `LLM_MODEL`).
+   - `CORS_ORIGIN_REGEX`: `https://.*\.vercel\.app` (or your specific Vercel URL).
+4. **Seed Demo Data** (Optional / One-time):
+   - In the Render Web Service shell, run: `python -m app.seed`.
+   - The seed script is non-destructive and will not overwrite data if the database is already initialized.
+
+### 2. Frontend Deployment (Vercel)
+
+1. In the Vercel Dashboard, click **Add New...** > **Project**.
+2. Import your GitHub repository: `Tarun-tej-2007/ai-pulse`.
+3. Configure Project Settings:
+   - **Framework Preset**: `Vite`
+   - **Root Directory**: `frontend`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+4. **Environment Variables**:
+   - `VITE_API_BASE_URL`: The live Render backend URL (e.g. `https://ai-pulse-backend.onrender.com`).
+5. Click **Deploy**.
+6. The app includes [frontend/vercel.json](file:///frontend/vercel.json) to handle Single Page Application URL routing and direct refreshes cleanly.
+
 ## Automated Test Suites
 
 Run the complete backend test suite using `pytest`:

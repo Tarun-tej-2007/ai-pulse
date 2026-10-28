@@ -27,10 +27,15 @@ PEOPLE_BLUEPEAK = [
 ]
 
 
-def run():
-    Base.metadata.drop_all(bind=engine)
+def run(drop=True):
+    if drop:
+        Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
+    if not drop and db.query(models.Organization).first():
+        print("Database already contains data. Skipping seed to prevent accidental overwrite.")
+        db.close()
+        return
 
     def make_org(name, depts):
         org = models.Organization(name=name)
@@ -90,4 +95,6 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    import sys
+    should_drop = "--drop" in sys.argv or "--reset" in sys.argv
+    run(drop=should_drop)

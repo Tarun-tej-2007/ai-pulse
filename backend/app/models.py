@@ -1,7 +1,11 @@
-from datetime import datetime
-from sqlalchemy import String, Integer, ForeignKey, DateTime, Text, Float, JSON
+from datetime import datetime, timezone
+from sqlalchemy import String, Integer, ForeignKey, DateTime, Text, Float, JSON, Boolean
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from .db import Base
+
+
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
 
 
 class Organization(Base):
@@ -52,4 +56,14 @@ class Response(Base):
     score: Mapped[float | None] = mapped_column(Float, nullable=True)
     reason: Mapped[str | None] = mapped_column(Text, nullable=True)
     flags: Mapped[list | None] = mapped_column(JSON, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=utc_now)
+
+
+class PracticePlanItem(Base):
+    __tablename__ = "practice_plan_items"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    membership_id: Mapped[int] = mapped_column(ForeignKey("memberships.id"), index=True)
+    activity_key: Mapped[str] = mapped_column(String(60))
+    completed: Mapped[bool] = mapped_column(Boolean, default=False)
+    completed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    membership = relationship("Membership")

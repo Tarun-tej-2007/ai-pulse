@@ -16,3 +16,5 @@ LLM_API_URL = os.getenv("LLM_API_URL", "")
 LLM_API_KEY = os.getenv("LLM_API_KEY", "")
 LLM_MODEL = os.getenv("LLM_MODEL", "")
 TOKEN_HOURS = 12
+_cors_env = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173")
+CORS_ORIGINS = [orig.strip() for orig in _cors_env.split(",") if orig.strip()]

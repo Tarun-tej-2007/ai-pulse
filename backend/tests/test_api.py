@@ -24,6 +24,7 @@ def test_admin_dashboard(client):
 
 def test_admin_cannot_see_other_org(client):
     headers, _ = login(client, "asha@northwind.test", "Northwind Logistics")
-    r = client.get("/dashboard?org_id=1", headers=headers)
-    assert r.status_code == 200
-    assert "departments" in r.json()
+    # Asha is an admin of Northwind (org_id 1), requesting Bluepeak (org_id 2) must be forbidden
+    r = client.get("/dashboard?org_id=2", headers=headers)
+    assert r.status_code == 403
+    assert "cannot view another organization" in r.json()["detail"].lower()

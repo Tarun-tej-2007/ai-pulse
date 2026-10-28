@@ -7,6 +7,14 @@ from .routes import auth_routes, diagnostic, reports, dashboard, practice_plan
 
 Base.metadata.create_all(bind=engine)
 
+# Auto-seed initial demo data if database is empty
+try:
+    from . import seed
+    seed.run(drop=False)
+except Exception:
+    pass
+
+
 app = FastAPI(title="AI Pulse API")
 app.add_middleware(
     CORSMiddleware,
